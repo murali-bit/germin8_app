@@ -1,0 +1,212 @@
+/* Germin8 dashboard — light theme: white cards on a warm page, gold accent.
+   Colour tokens live in tailwind.config.js (gold-*, ink, page, surface, line). */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply font-sans bg-page text-ink;
+    margin: 0;
+    min-height: 100vh;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1, h2, h3, h4 {
+    @apply text-ink font-semibold;
+  }
+
+  ::selection {
+    background: theme('colors.gold.200');
+    color: theme('colors.ink.DEFAULT');
+  }
+
+  /* Form controls: readable ink text, soft placeholder, gold focus ring.
+     Utilities on the element (e.g. focus:outline-none, bg-transparent) still win. */
+  input, select, textarea {
+    color: theme('colors.ink.DEFAULT');
+  }
+  input::placeholder, textarea::placeholder {
+    color: theme('colors.ink.subtle');
+    opacity: 1;
+  }
+  input[type='checkbox'], input[type='radio'], input[type='range'] {
+    accent-color: theme('colors.gold.600');
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.gold.600');
+    outline-offset: 2px;
+  }
+
+  /* Scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.line.strong') transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.line.strong');
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.gold.300');
+    background-clip: padding-box;
+  }
+}
+
+@layer components {
+  /* Cards */
+  .card {
+    @apply bg-surface border border-line rounded-xl shadow-sm;
+  }
+
+  /* Legacy names: the old glass look is now a plain white card. */
+  .glass,
+  .glass-card {
+    @apply bg-surface border border-line shadow-sm;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .glass-card:hover {
+    @apply border-line-strong;
+  }
+
+  .glass-nav {
+    @apply bg-surface border-b border-line;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white;
+    @apply bg-gold-700 hover:bg-gold-800 active:bg-gold-900 shadow-sm transition-colors duration-150 cursor-pointer;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-ink bg-white;
+    @apply border border-line hover:bg-gold-50 hover:border-gold-200 transition-colors duration-150 cursor-pointer;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Legacy alias of the primary button. */
+  .btn-indigo {
+    @apply btn-primary;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink-muted;
+    @apply hover:bg-gold-50 hover:text-ink transition-colors duration-150 cursor-pointer;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold rounded-full border border-transparent;
+  }
+  .badge-gold,
+  .badge-indigo {
+    @apply badge bg-gold-50 text-gold-800 border-gold-200;
+  }
+  .badge-green {
+    @apply badge bg-emerald-50 text-emerald-700 border-emerald-200;
+  }
+  .badge-gray {
+    @apply badge bg-page text-ink-muted border-line;
+  }
+
+  /* Inputs */
+  .input-field {
+    @apply w-full px-3.5 py-2.5 text-sm text-ink bg-white border border-line-input rounded-lg outline-none;
+    @apply transition-shadow duration-150 placeholder:text-ink-subtle;
+  }
+  .input-field:hover {
+    @apply border-ink-muted;
+  }
+  .input-field:focus {
+    @apply border-gold-600 ring-2 ring-gold-500;
+  }
+
+  .label {
+    @apply block text-xs font-semibold text-ink-muted mb-1.5;
+  }
+
+  /* Sidebar nav */
+  .nav-item {
+    @apply relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-ink-muted;
+    @apply transition-colors duration-150 cursor-pointer;
+  }
+  .nav-item:hover {
+    @apply bg-gold-50/70 text-ink;
+  }
+  .nav-item.active {
+    @apply bg-gold-50 text-gold-800 font-semibold;
+  }
+  .nav-item.active::before {
+    content: '';
+    @apply absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-full bg-gold-500;
+  }
+
+  .stat-card {
+    @apply bg-surface border border-line rounded-xl shadow-sm p-5;
+  }
+
+  /* Tables */
+  .data-table th {
+    @apply px-4 py-3 text-left text-[11px] font-semibold text-ink-muted uppercase tracking-wider bg-page/60 border-b border-line;
+  }
+  .data-table td {
+    @apply px-4 py-3.5 text-sm text-ink border-b border-line/70;
+  }
+  .data-table tr:last-child td {
+    @apply border-b-0;
+  }
+  .data-table tbody tr:hover td {
+    @apply bg-gold-50/40;
+  }
+}
+
+/* Headings used across pages (kept as a class: older components reference it). */
+.hero-headline {
+  font-family: theme('fontFamily.sans');
+  font-weight: 600;
+  color: theme('colors.ink.DEFAULT');
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.font-display,
+.font-google {
+  font-family: theme('fontFamily.sans');
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

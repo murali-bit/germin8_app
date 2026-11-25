@@ -1,0 +1,26 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.production
+*.log
+.DS_Store
+Thumbs.db
+.claude/
+*.sqlite
+*.db
+*.db-wal
+*.db-shm
+package-lock.json
+
+# Data & test runs (never push real company data)
+**/real-data*/
+**/sample-data/
+**/speedpro-run-*/
+**/final-test-run-*/
+**/multiyear-*/
+**/dataset/
+**/data/*.db
+**/data/attachments/
+**/*-run/
+**/backups/

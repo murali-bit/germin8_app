@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Germin8 is a technology company working in finance. Tools for Tally to Zoho migration, office management, incorporation and ROC filings and financial statements, plus custom automation." />
+    <title>Germin8 · Technology for the finance function</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="splash" role="status" aria-label="Loading Germin">
+      <style>
+        #splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#F7F6F2;transition:opacity .45s ease}
+        #splash.splash-out{opacity:0;pointer-events:none}
+        #splash .s-logo{display:inline-flex;align-items:center;gap:3px;font:800 34px/1 "Plus Jakarta Sans",Inter,system-ui,sans-serif;letter-spacing:-.03em;color:#171717}
+        #splash .s-track{width:140px;height:2px;background:rgba(201,163,50,.2);overflow:hidden;border-radius:2px}
+        #splash .s-bar{width:40%;height:100%;background:linear-gradient(90deg,transparent,#C9A332,transparent);animation:s-run 1.1s ease-in-out infinite}
+        #splash .s-tag{font:500 12px Inter,system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(23,23,23,.5)}
+        @keyframes s-run{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
+        @media (prefers-reduced-motion:reduce){#splash .s-bar{animation:none;width:100%}}
+      </style>
+      <span class="s-logo">Germin<svg height="20" viewBox="0 0 40 20" fill="none" aria-hidden="true"><path d="M10 3.5C5.9 3.5 3 6.4 3 10s2.9 6.5 7 6.5c3.6 0 6-2.6 10-6.5 4-3.9 6.4-6.5 10-6.5 4.1 0 7 2.9 7 6.5s-2.9 6.5-7 6.5c-3.6 0-6-2.6-10-6.5-4-3.9-6.4-6.5-10-6.5Z" stroke="#C9A332" stroke-width="3.4" stroke-linejoin="round"/></svg></span>
+      <span class="s-track"><span class="s-bar" style="display:block"></span></span>
+      <span class="s-tag">Intelligent technology</span>
+    </div>
+    <noscript>
+      <div style="position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#F7F6F2;color:#171717;font-family:Inter,system-ui,sans-serif;text-align:center;padding:24px">
+        <p style="max-width:420px;line-height:1.6"><strong style="font-size:22px">Germin needs JavaScript.</strong><br/>Please turn it on in your browser settings and reload this page.</p>
+      </div>
+    </noscript>
+
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

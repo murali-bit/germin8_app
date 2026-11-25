@@ -1,0 +1,64 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Step 2 mock</title>
+<style>.hide{display:none} .modal{position:fixed;top:20px;left:20px;background:#fff;border:1px solid #000;padding:10px}</style>
+</head><body>
+<!-- Mock of MCA AOC-4 wizard: step 1 -> Next -> step 2 (Attachment & Declaration, certificate, Save, Proceed). For tests only. -->
+<ul>
+  <li class="listep progress-step active" id="st1">Company details</li>
+  <li class="listep progress-step" id="st2">Attachment &amp; Declaration</li>
+  <li class="listep progress-step" id="st3">Review &amp; Submit</li>
+</ul>
+<div id="step1"><input name="guideContainer-rootPanel-x-CIN___jqName" value="U01100KA2019PTC000001"></div>
+<div id="step2" class="hide">
+  <div class="guidefield"><div class="guideFieldLabel">(a) *Copy of financial statements duly authenticated</div>
+    <div class="guideFieldWidget afFileUpload mca-single-fileupload">
+      <input type="file" style="display:none" name="guideContainer-rootPanel-panel-panel_1691095394-panel_985107667-fileuploadwithplaceh___jqName">
+      <input type="text" readonly class="fname">
+      <button>Choose File</button><button class="up" disabled>Upload</button><button class="pv" disabled>Preview</button><button class="rm" disabled>Remove</button>
+    </div></div>
+  <div class="guidefield"><div class="guideFieldLabel">(g) Optional attachment(s), if any</div>
+    <div class="guideFieldWidget afFileUpload fileUpload">
+      <input type="file" style="display:none" name="guideContainer-rootPanel-panel-panel_1691095394-guidefileupload_copy_651054413___jqName">
+      <input type="text" readonly class="fname">
+      <button>Choose File</button><button class="up" disabled>Upload</button><button class="pv" disabled>Preview</button><button class="rm" disabled>Remove</button><button class="plus">+</button>
+    </div></div>
+  <input name="guideContainer-rootPanel-panel-panel_1691095394-panel_985107667-panel-guidetextbox___jqName" aria-label="Enter Name">
+  <input name="guideContainer-rootPanel-panel-panel_1691095394-panel_985107667-panel-guidetextbox_copy_co___jqName" placeholder="DD/MM/YYYY">
+  <select name="guideContainer-rootPanel-panel-panel_1691095394-panel_985107667-panel-guidedropdownlist___jqName">
+    <option value="">Select Here</option><option value="DIR">Director</option><option value="MGR">Manager</option><option value="SEC">Secretary</option>
+  </select>
+  <input name="guideContainer-rootPanel-panel-panel_1691095394-panel_985107667-panel-guidetextbox_6793388___jqName">
+  <!-- Certificate by Practicing Professional (field names unknown on MCA: matched by label text) -->
+  <div class="guidePanel" id="certPanel">
+    <div class="guidePanelTitle"><span>Certificate by Practicing Professional</span></div>
+    <div class="guidefield"><div class="guideFieldLabel">Whether practicing professional is</div>
+      <label><input type="radio" name="certProf" value="1"> Chartered Accountant</label>
+      <label><input type="radio" name="certProf" value="2"> Cost Accountant</label>
+      <label><input type="radio" name="certProf" value="3"> Company Secretary</label></div>
+    <div class="guidefield"><div class="guideFieldLabel">Whether associate or fellow</div>
+      <label><input type="radio" name="certAF" value="A"> Associate</label>
+      <label><input type="radio" name="certAF" value="F"> Fellow</label></div>
+    <div class="guidefield"><div class="guideFieldLabel">Membership number</div><input type="text" id="certMem"></div>
+    <div class="guidefield"><div class="guideFieldLabel">Certificate of practice number</div><input type="text" id="certCop"></div>
+  </div>
+</div>
+<button id="prev">Previous</button><button id="save">Save</button><button id="proceed" class="hide">Proceed</button><button id="next">Next</button>
+<script>
+window.__log = [];
+const st = n => { for (const i of [1,2,3]) document.getElementById('st'+i).classList.toggle('active', i===n); document.getElementById('step1').classList.toggle('hide', n!==1); document.getElementById('step2').classList.toggle('hide', n!==2); document.getElementById('proceed').classList.toggle('hide', n!==2); };
+let cur = 1;
+document.getElementById('next').onclick = () => { window.__log.push('next@'+cur); setTimeout(() => { cur++; st(cur); }, 700); };
+document.getElementById('save').onclick = () => { window.__log.push('save@'+cur); modal('Data saved successfully'); };
+document.getElementById('proceed').onclick = () => { window.__log.push('proceed@'+cur); };
+function modal(msg){ const m=document.createElement('div'); m.className='modal'; m.setAttribute('role','dialog'); m.innerHTML='<p>'+msg+'</p><button>OK</button>'; m.querySelector('button').onclick=()=>m.remove(); document.body.appendChild(m); }
+function wire(w){
+  const inp=w.querySelector('input[type=file]');
+  inp.addEventListener('change',()=>{ const f=inp.files[0]; w.querySelector('.fname').value=f?f.name:''; w.querySelector('.up').disabled=!f; window.__log.push('change:'+(f&&f.name)+':'+(f&&f.size)); });
+  w.querySelector('.up').onclick=()=>{ window.__log.push('upload'); setTimeout(()=>{ if (inp.files[0].size > 6*1048576) { modal('Error: file size exceeds the limit'); return; } w.querySelector('.pv').disabled=false; w.querySelector('.rm').disabled=false; modal('File uploaded successfully'); },600); };
+  const plus=w.querySelector('.plus'); if(plus) plus.onclick=()=>{ const c=w.parentElement.cloneNode(true); c.querySelectorAll('button').forEach(b=>{ if(!/Choose|\+/.test(b.textContent)) b.disabled=true; }); c.querySelector('.fname').value=''; w.parentElement.after(c); wire(c.querySelector('.afFileUpload')); };
+}
+document.querySelectorAll('.afFileUpload').forEach(wire);
+</script>
+<script src="../js/page-automation.js"></script>
+<script src="../js/step2-attach.js"></script>
+</body></html>

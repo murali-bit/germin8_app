@@ -1,0 +1,30 @@
+{
+  "note": "Copy to seed-users.json and set your own passwords. seed-users.json is ignored by Git.",
+  "users": [
+    {
+      "name": "Rajesh Mehta",
+      "email": "superadmin@demo.test",
+      "password": "change-me-super_admin",
+      "role": "super_admin"
+    },
+    {
+      "name": "Priya Sharma",
+      "email": "admin@demo.test",
+      "password": "change-me-admin",
+      "role": "admin"
+    },
+    {
+      "name": "Arun Iyer",
+      "email": "analyst@demo.test",
+      "password": "change-me-analyst",
+      "role": "analyst"
+    },
+    {
+      "name": "Sunil Deshmukh",
+      "email": "viewer@demo.test",
+      "password": "change-me-viewer",
+      "role": "viewer",
+      "company": "Apex Engineering Technologies Pvt. Ltd."
+    }
+  ]
+}

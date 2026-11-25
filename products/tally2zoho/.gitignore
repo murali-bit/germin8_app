@@ -1,0 +1,28 @@
+# --- client and migration data: never in version control ---
+real-data/
+server/data/
+backups/
+final-test-run/
+final-test-run-*/
+zoho-screens/
+reports/private/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+# local passwords of the test users (see server/seed-users.example.json)
+server/seed-users.json
+.env
+.env.*
+!.env.example
+
+# --- build output and dependencies ---
+node_modules/
+frontend/dist/
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+
+# --- local tool settings ---
+.claude/settings.local.json

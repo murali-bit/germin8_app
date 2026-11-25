@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <rect width="48" height="48" rx="12" fill="#101C35" />
+  <path d="M24 10C16.268 10 10 16.268 10 24C10 31.732 16.268 38 24 38C30.627 38 36.177 33.398 37.604 27.2H24V21.6H42C42.067 22.385 42.1 23.186 42.1 24C42.1 33.996 33.996 42.1 24 42.1C14.004 42.1 5.9 33.996 5.9 24C5.9 14.004 14.004 5.9 24 5.9C29.07 5.9 33.666 8 36.96 11.41L33.72 14.65C31.28 12.18 27.84 10 24 10Z" fill="url(#brandGrad)" />
+  <circle cx="24" cy="24" r="3.5" fill="#65A5FF" />
+  <path d="M27.5 24H38" stroke="#246BFD" stroke-width="2" stroke-linecap="round" />
+  <defs>
+    <linearGradient id="brandGrad" x1="10" y1="10" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#246BFD" />
+      <stop offset="1" stop-color="#65A5FF" />
+    </linearGradient>
+  </defs>
+</svg>

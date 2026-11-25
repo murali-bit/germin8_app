@@ -1,0 +1,7 @@
+{
+  "name": "synthetic-companies-test",
+  "private": true,
+  "type": "module",
+  "description": "Lets `node --test test/synthetic/` run the synthetic test-company library (Node resolves the folder to main).",
+  "main": "companies.test.js"
+}

@@ -1,0 +1,185 @@
+MANUAL TEST GUIDE - TALLY TO ZOHO BOOKS (v2)
+=============================================
+
+Goal: take your company's Tally files through the tool, import every file
+into a NEW Zoho Books test organisation, and check the Trial Balance matches.
+Never import into live books.
+
+Time: about 1 hour (15 min in the tool, 45 min in Zoho).
+
+
+BEFORE YOU START
+----------------
+1. Both servers must be running. If the app does not open, start them,
+   each in its own terminal, from the project folder:
+      npm --prefix server start
+      npm --prefix frontend run dev
+2. Open:  http://localhost:5173
+3. Sign in (TEST ACCOUNT ONLY - change before real use):
+      Email:     admin@demo.test
+      Password:  gHfEDAd9sIZ7
+   Other test accounts are in server\seed-users.json.
+4. Keep these 3 files ready (folder: real-data):
+      Master.json
+      Transactions.json
+      TrialBal_ledgers.json      <- the ledger-wise one, NOT TrialBal_detailed.json
+
+
+PART 1 - IN THE TOOL (about 15 minutes)
+---------------------------------------
+Step 1. New Migration
+   - Company:         <your company name, as in Tally>
+   - GSTIN:           <your 15-character GSTIN>
+   - Financial year:  2025-26
+   - Click Continue.
+   (Do NOT reuse test_2: it has old tax names and may have a wrong GSTIN.)
+
+Step 2. Upload the files (Upload Center)
+   - Master.json            -> "All masters in one file"
+   - Transactions.json      -> "All transactions in one file"
+   - TrialBal_ledgers.json  -> "Trial Balance"
+   Expected: 274 customers, 207 vendors, 659 vouchers.
+
+Step 3. Completeness Check
+   - Stock Summary: mark "Not applicable"
+     (reason: service company, no stock).
+   - Click "Read the files" and wait until it says finished.
+
+Step 4. Fix the 38 contacts (Mapping Studio -> Fix contacts)
+   - Click the filter "Registered under GST, but no GSTIN 38".
+   - Tick select all.
+   - Choose "Treat as unregistered" (or type the real GSTIN per row).
+   - Click Apply.
+   Without this, Zoho refuses those 38 customers/vendors.
+
+Step 5. Everything else: leave as it is
+   - The tool already chose a safe default for every other decision.
+   - On each decision card you can click "Accept as per Tally" to move on.
+   - To see what the tool decided: "Assumptions the tool made" card
+     on Prepare migration.
+
+Step 6. Create the files
+   - Prepare migration -> "Create files" (button at the bottom).
+
+Step 7. Check before downloading
+   - Open "Zoho check".
+     Expected: about 98% or more of rows expected to import,
+     and nothing under "Will be refused".
+     (4 invoice lines with a negative price show as "May be refused".)
+   - Open "Voucher Reconciliation".
+     Expected: 659 in = 659 out, every row Matches.
+
+   Write down the Zoho check % here: ________
+
+
+PART 2 - IN ZOHO BOOKS (about 45 minutes)
+-----------------------------------------
+Step 8. Create a NEW empty Zoho Books test organisation
+   - Country India, financial year April - March.
+   - Do not use the organisation from the first test.
+
+Step 9. Open the Import Wizard in the tool and follow it
+   (sidebar -> Import Wizard; Back / Next are at the bottom)
+
+   Wizard step 1 - Set up Zoho Books
+      Do each item in Zoho (profile, GST, TDS taxes, preferences,
+      tax exemptions) and tick it in the tool. The Settings paths are
+      written on the page. Read the lines "For this company": they are
+      worked out from your data (state, financial year, TDS taxes,
+      parties outside India, reverse charge).
+      Answer the two HSN/SAC questions.
+      The Migration Date is its own step after the bank accounts: Zoho
+      does not save it alone, so you type one real balance with it.
+      (Also open READ_ME_FIRST.txt from the zip: it has the same list.)
+
+   Wizard steps 2 to 11 - one file per step, in this order:
+       2  Chart of Accounts
+       3  Bank accounts (tick each one once it exists in Zoho)
+       4  Customers
+       5  Vendors
+       6  Items
+       7  Opening balances
+       8  Bills
+       9  Invoices
+      10  Manual Journals
+      11  Manual Journals (receipts, payments, contra)
+
+   For EACH file step:
+      a. Click Download in the tool.
+      b. In Zoho, go where the step says (for example
+         Sales -> Customers -> ... -> Import).
+      c. Choose the file, Character Encoding UTF-8.
+      d. Choose the options the step lists
+         (skip/overwrite duplicates, columns NOT to map).
+      e. Preview, then Import.
+      f. Back in the tool, "What happened in Zoho?":
+         type rows imported and rows refused.
+      g. If any rows were refused: download Zoho's error file
+         and upload it in the same step. The tool shows the cause.
+      h. Click "Mark as imported", then Next.
+   A step stays locked while an earlier file it depends on has refused rows.
+
+   Wizard step 12 - Compare trial balances
+      - In Zoho: Reports -> Trial Balance, as of 31-Mar-2026, export it.
+      - Upload it on the comparison screen the step links to.
+      - Differences should be zero, except the 191 held vouchers
+        (see "Expected differences" below).
+
+
+PART 3 - RESULT SHEET (fill in and send back)
+---------------------------------------------
+   File                                   In file   Imported   Refused
+   -------------------------------------  -------   --------   -------
+   Chart of Accounts                      _______   ________   _______
+   Opening balances (bank list/journal)   _______   ________   _______
+   Customers                              _______   ________   _______
+   Vendors                                _______   ________   _______
+   Items                                  _______   ________   _______
+   Bills                                  _______   ________   _______
+   Invoices                               _______   ________   _______
+   Manual Journals                        _______   ________   _______
+   Receipts/payments/contra journals      _______   ________   _______
+
+   Trial Balance difference after import: __________
+
+Send back:
+   1. This sheet.
+   2. Every Zoho error file (errors.csv).
+   3. A screenshot of any Zoho screen that complained before import
+      (for example on Map Fields).
+
+
+EXPECTED DIFFERENCES (not errors)
+---------------------------------
+   - 191 vouchers are held: 30 receipts, 157 payments, 4 debit notes.
+     To bring receipts and payments in, open the Export Center, held
+     vouchers. In Zoho Books download the sample file of Payments Received
+     (Sales > Payments Received > More > Import Payments) and of Payments
+     Made (Purchases > Payments Made > More > Import Payments). Upload each
+     in the tool. The tool says whether it could build the file. If it can,
+     download it (it is also in the zip) and import it after the other files.
+     Vendor Credits (the 4 debit notes) stay held in any case.
+     Until then bank and party balances will not fully match Tally.
+   - 4 invoice lines with a negative price may be refused.
+
+
+THINGS THIS TEST WILL CONFIRM (watch these)
+-------------------------------------------
+   - Items with rate 0 and the 3 service items are accepted.
+   - Bill and invoice lines with 0% tax (GST0 / IGST0) are accepted.
+   - Bank opening balances (journal or Settings -> Opening Balances).
+   - TDS tax names on bills and invoices match Zoho's.
+   - 32 names with a line break are accepted.
+   - Loan accounts are written with the type "Non Current Liability" (Zoho Books India has no "Long Term Liability").
+   - Bills and invoices with TDS carry the TDS name, percentage and section code (no "Enter the required TDS details" error).
+   - Reverse charge bills of vendors without a state use the GST group (no "IGST cannot be applied" error).
+   - Invoice lines carry a 6-digit HSN/SAC when the field is on in Zoho Books.
+   - The payment file built from your sample is accepted (try one payment first).
+
+
+IF SOMETHING GOES WRONG
+-----------------------
+   - App does not open: restart both servers (see Before you start).
+   - "Create the files again" message: click Create files again.
+   - Page shows "This page does not exist": click Go back or Dashboard.
+   - Anything else: take a screenshot and send it.

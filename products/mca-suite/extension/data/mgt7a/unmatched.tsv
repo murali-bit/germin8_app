@@ -1,0 +1,74 @@
+type	locked	label	rowHeader	colHeader	name
+radio					panel-panel-panel_1385805192_cop_881733771-guideradiobutton
+text	L	i *Corporate Identity number (CIN)			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-guidetextbox_2095568
+select		i *Corporate Identity Number (CIN)			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-guidedropdownlist_66
+date		Server Date Please Enter date in mm/dd/yyyy format only			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-guidedatepicker_1591
+text		userTypeHidden			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-guidetextbox_1545196
+date		Saved To Date Please Enter date in mm/dd/yyyy format only			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-guidedatepicker_1591_694698958
+text		cinFinal			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel1635701523164_c-guidetextbox_1545196
+text		cinFinal_copy_1			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel1635701523164_c-guidetextbox_1545196_1805993533
+radio					panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-guideradiobutton_763248325
+text	L	Text box			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel-tableitem16424905036
+text	L	(b) If yes, date of AGM Please Enter date in DD/MM/YYYY format only			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel-panel-guidetextdraw_134467
+text		(c) Due date of AGM Please Enter date in DD/MM/YYYY format only			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel-panel-guidetextbox
+radio					panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel-panel-guideradiobutton
+text		(e) If yes, provide the Service Request Number (SRN) of the GNL-1 application form filed for extension			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel-guidetextbox_1261202206
+text		(f) Extended due date of AGM after grant of extension Please Enter date in DD/MM/YYYY format only			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel-guidetextbox_491984941
+text		(g) Specify the reason for not holding the same			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel1641304338946-panel-guidetextbox_1733075746
+checkbox	L				panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel1641305659436-panel1641305638847-panel1644773303389-guidecheckbox_copy
+checkbox	L				panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel1641305659436-panel1641305638847-panel1645075594356-guidecheckbox_copy
+text	L	Text Box		Authorized Capital	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel1641305659436-panel1641305638847-panel-table_1084006494-Row2-tableItem1
+text	L	Text box		Number of shares	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel1641305659436-panel1641305638847-panel-panel1643981859958-table_2043315125-Row1641809805034-tableitem16418098050
+checkbox	L				panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel1641305659436-panel1641378905345-guidecheckbox
+text	L	Number of transfers			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel1641305659436-panel1641378905345-panel_copy_copy_copy-guidetextbox_copy
+text	L	Text Box			panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-guidetextbox
+text	L	Text box		Type of Securities	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1662538855125-tableItem1662538855126
+text	L	Text box		Number of Securities	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1662538855125-tableItem1662538855127
+text	L	Text box		Nominal Value of each Unit	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1662538855125-tableItem1662538855128
+text	L	Text box		Total Nominal Value	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1662538855125-tableItem1662538855129
+text	L	Text box		Paid up Value of each Unit	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1662538855125-tableItem1662538855130
+text	L	Text box		Total Paid up Value	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1662538855125-tableItem1662538855131
+text	L	Latitude details (as on filing date)		Type of Securities	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1641295218987-tableItem1641295218988
+text	L	Text box		Number of Securities	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1641295218987-tableItem1641295218989
+text	L	Text box		Nominal Value of each Unit	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1641295218987-tableItem1641295218990
+text	L	Text box		Total Nominal Value	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1641295218987-headerItem1661863639394
+text	L	Text box		Paid up Value of each Unit	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1641295218987-headerItem1661863649701
+text	L	Text box		Total Paid up Value	panel_1665650438-panel_526419145-panel-panel-panel_copy_copy-panel_1953168154-panel-panel-table-Row1641295218987-headerItem1661863652423
+text		Text box			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel-panel1641454283114-panel1641545919571-panel-table_copy_copy-Row2-headerItem1715179434635
+text		Text box			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel-panel1641454283114-panel1641545919571-panel-table_copy_copy-Row1641295240128-headerItem1715179434897
+text		Text box			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel-panel1641454283114-panel1641545919571-panel-table_copy_copy-Row1641295218987-headerItem1715179435200
+text		Text box			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel-panel1641454283114-panel1641545919571-panel-table_copy_copy-Row1641295226814-headerItem1715179435483
+text	L	Text box			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel-panel1641454283114-panel1641545919571-panel-table_copy_copy-Row1715180112577-tableItem1715180112580
+text	L	covenedMeetingExcelData			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641551788472-panel_copy_copy_copy-guidetextbox_4552685
+text	L	covenedMeetingPdfData			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641551788472-panel_copy_copy_copy-guidetextbox_4552685_1829655281
+text	L	boardMeetingExcelData			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641552137996-panel_copy_copy_copy-guidetextbox_4552685
+text	L	boardMeetingPdfData			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641552137996-panel_copy_copy_copy-guidetextbox_4552685_1829655281
+text	L	Whether attended AGM held on Please Enter date in YYYY-MM-DD format only		Whether attended AGM held on	panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641558444779-table_copy-Row1-panel1643029915553-headerItem1641379237169
+text	L	Text box		Whether attended AGM held on	panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641558444779-table_copy-Row1-panel1643029915553-tableitem16424905036_506046610
+text	L	Text box		Whether attended AGM held on	panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641558444779-table_copy-Row1-panel1643029915553-tableitem16424905036
+text	L	Text box		S. No.	panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641558444779-table_copy-Row1642496647341-tableItem1642496647342
+text	L	Text box		DIN	panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_656552656-panel1641551715887-panel1641558444779-table_copy-Row1642496647341-headerItem1661927512023
+checkbox	L				panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_567020938-panel1641558776123-guidecheckbox
+checkbox	L				panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_567020938-panel1641559970738-guidecheckbox
+text	L	Text Box			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_567020938-panel1641559970738-guidetextbox
+checkbox	L				panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_567020938-panel1641559970738-guidecheckbox_1112659828
+text	L	Text Box			panel_1665650438-panel_1006668027_cop-panel-panel-panel_1978902971-panel-panel_567020938-panel1641559970738-guidetextbox_743562178
+text	L	Name of the Designated Person			panel_1665650438-panel_1006668027-panel-panel-panel-guidetextbox_1122753_1822321416
+text	L	Text Box			panel_1665650438-panel_1006668027-panel-panel-panel1641790363839-guidetextbox_8623721
+text	L	Text Box			panel_1665650438-panel_1006668027-panel-panel-panel1641791855920-guidetextbox
+date		Text Box Please Enter date in mm/dd/yyyy format only			panel_1665650438-panel_1006668027-panel-panel-panel1641791855920-guidetextbox_853338657
+text	L	formId			panel_1211949518_cop-guidetextbox
+text	L	formDescription			panel_1211949518_cop-guidetextbox_675744276
+text	L	formName			panel_1211949518_cop-guidetextbox_1848615136
+text	L	formVersion			panel_1211949518_cop-guidetextbox_1460172777
+text	L	userId			panel_1211949518_cop-guidetextbox_2070870574
+text	L	integrationId			panel_1211949518_cop-guidetextbox_612628904
+text	L	referenceNumber			panel_1211949518_cop-guidetextbox_3938941
+text	L	srnStatus			panel_1211949518_cop-guidetextbox_393894177
+text	L	srn			panel_1211949518_cop-guidetextbox_1241688170
+text	L	Path_for_PDFGeneration			panel_1211949518_cop-guidetextbox_578552518
+text	L	formIntegrationId			panel_1211949518_cop-guidetextbox_1939066937
+text	L	formAttachList			panel_1211949518_cop-guidetextbox_401867444
+text	L	Prefill Box			panel_1211949518_cop-guidetextbox_858207514
+text	L	onload			panel_1211949518_cop-guidetextbox_1565774995
+text	L	savedGNL1srn			panel_1211949518_cop-guidetextbox_1851213314

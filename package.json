@@ -1,0 +1,29 @@
+{
+  "name": "germin8-platform",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Germin8 — Intelligent Automation for Accounting & Compliance",
+  "scripts": {
+    "install:all": "npm install && cd website && npm install && cd ../products/tally2zoho/frontend && npm install && cd ../../tally2zoho/server && npm install && cd ../../../mca-suite/dashboard && npm install && cd ../../mca-suite/backend && npm install",
+    "build:website": "cd website && npm run build",
+    "build:tally2zoho": "cd products/tally2zoho/frontend && npm run build",
+    "build:mca-dashboard": "cd products/mca-suite/dashboard && npm run build",
+    "build:all": "npm run build:website && npm run build:tally2zoho && npm run build:mca-dashboard",
+    "start": "node server.js",
+    "start:tally2zoho": "cd products/tally2zoho/server && node src/index.js",
+    "start:mca-backend": "cd products/mca-suite/backend && node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "http-proxy-middleware": "^3.0.3",
+    "compression": "^1.7.5",
+    "helmet": "^8.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

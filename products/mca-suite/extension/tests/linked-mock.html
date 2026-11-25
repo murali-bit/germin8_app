@@ -1,0 +1,335 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Linked forms mock</title>
+<style>
+  body { font: 13px system-ui, sans-serif; margin: 12px; }
+  .guideFieldNode { margin: 4px 0; } .guideFieldNode label { display: block; color: #555; font-size: 11px; word-break: break-all; }
+  .guideFieldNode input[type=text], .guideFieldNode textarea, .guideFieldNode select { width: 520px; }
+  .guideFieldError { color: #b00; font-size: 11px; }
+  .modal { position: fixed; top: 20px; right: 20px; background: #fff; border: 2px solid #000; padding: 10px; }
+  table.rows td { padding: 2px; } #bar { position: sticky; bottom: 0; background: #eee; padding: 6px; }
+  pre#out { background: #f6f6f6; padding: 8px; max-height: 360px; overflow: auto; }
+</style>
+</head><body>
+<!-- Mock of the three AOC-4 linked forms (MCA AEM adaptive forms) for tests only.
+     Open with ?form=aoc2 | eauditor | eboard (add &job=<id> to use a queued job and saved answers from localhost:4000). Field names are the exact ones from the linked-forms spec.
+     Save validates required fields and shows "Data Added Successfully"; Submit only counts clicks
+     (window.__submitClicks must stay 0); Proceed counts clicks (window.__proceedClicks).
+     "Self-test" runs the same sequence as js/linked/runner.js: pre-steps → one pageFill → Save → confirm → Proceed. -->
+<h3 id="title"></h3>
+<div id="form"></div>
+<div id="bar">
+  <button id="prev">Previous</button> <button id="save">Save</button>
+  <button id="proceed">Proceed</button> <button id="submit">Submit</button>
+  &nbsp; | &nbsp; <label><input type="checkbox" id="stProceed" checked> self-test clicks Proceed</label>
+  <button id="selftest" type="button">Self-test</button>
+</div>
+<pre id="out"></pre>
+<script>
+window.__submitClicks = 0; window.__proceedClicks = 0; window.__saveClicks = 0; window.__log = [];
+const FORM = new URLSearchParams(location.search).get('form') || 'aoc2';
+const PFX = 'guideContainer-rootPanel-';
+const yesNo = 'radio';
+// [path, kind, {label, required, options, readonly}]
+const A = 'panel_1665650438-panel_526419145-panel-panel-';
+const D = A + 'panel_copy_copy-panel_1978902971_cop-panel1634051861580-panel1634057462326_c-';
+const Q = 'panel_1665650438-panel_526419145-';
+const QO = Q + 'panel_1480276982_cop-panel_1860351946_cop_160345464-panel_copy_copy_copy-panel-';
+const QQ = Q + 'panel-panel-panel-panel-panel_copy_copy_copy-panel-panel_1950235866_cop-';
+const O = Q + 'panel-panel-panel-panel_1480276982_cop_1904032734-panel-';
+const S = Q + 'panel-panel-panel-panel_1480276982_cop_1955144168-panel-panel_copy-panel_268085455_copy-';
+const B = 'panel_1665650438-panel_526419145-panel-panel-panel-';
+const R = B + 'panel_2115028168-';
+const E = B + 'panel1634057462326_c-';
+const ROW = 'table_47856561_copy_-Row1642490503674';
+const CARO_OPTS = ['Favourable Remark', 'Unfavourable remark', 'Disclaimer remark', 'Clause not applicable'];
+const CARO_ROWS = [['Row1', 'tableItem1', 'headerItem1659942540127'], ['Row2', 'tableItem1', 'headerItem1659942541636'],
+  // [row id, select cell = row id + d1, detail cell = row id + d2] (e.g. Row1659943254965 → tableItem1659943254967 / …968)
+  ...[[1659943254965, 2, 3], [1659943422043, 2, 3], [1659943437633, 2, 3], [1659943452020, 3, 4], [1659943458764, 2, 3], [1659943465264, 2, 3],
+    [1659943472058, 2, 3], [1659943479150, 2, 3], [1659943486694, 2, 3], [1659943756869, 2, 3], [1659943763944, 2, 3], [1659943770573, 2, 3],
+    [1659943777908, 2, 3], [1659943787641, 2, 3], [1719821181132, 2, 3], [1719821172680, 2, 3], [1719821166274, 2, 3], [1719821126612, 2, 3],
+    [1719817952613, 2, 3]].map(([r, a, b]) => ['Row' + r, 'tableItem' + (r + a), 'tableItem' + (r + b)])];
+
+const FIELDS = {
+  aoc2: [
+    [A + 'panel-guidetextbox', 'text', { label: 'Number of contracts not at arm’s length', required: true, value: '0' }],
+    [A + 'panel_copy_copy-panel_885569515-guidetextbox', 'text', { label: 'Number of contracts at arm’s length', required: true }],
+    [A + 'panel_copy_copy-panel_885569515-panel_copy-guidetextbox', 'hiddenjson', { aria: 'atArmSubmitData' }],
+    [A + 'panel_copy_copy-panel_885569515-panel_copy-panel-panel_copy-saveguidedraft_919477717', 'upload', { panel: 'atArm' }],
+    [A + 'panel_copy_copy-panel_885569515-panel_copy-panel-panel_copy-saveguidedraft__', 'button', { text: 'Download' }],
+    [A + 'panel-panel-panel-panel_copy-saveguidedraft_919477717', 'upload', { panel: 'notAtArm' }],
+    [D + 'guidetextbox_1814224970', 'text', { label: 'Resolution number', required: true }],
+    [D + 'guidetextbox_1256508639', 'date', { label: 'Resolution date', required: true }],
+    [D + 'guidedropdownlist_66', 'select', { label: 'Designation', required: true, options: ['Select Category', 'Director', 'Manager', 'Secretary', 'CEO', 'CFO', 'IRP/RP/Liquidator'] }],
+    [D + 'guidetextbox', 'text', { label: 'DIN', required: true }],
+  ],
+  eauditor: [
+    [QO + 'guidetextbox', 'textarea', { label: '1(a) Opinion', required: true }],
+    [QO + 'guidetextbox_2122660506', 'textarea', { label: '1(b) Basis', required: true }],
+    [QO + 'guidetextbox_1787558811', 'textarea', { label: '1(c) Emphasis' }],
+    [QO + 'panel-guidetextbox_9895278', 'text', { label: '1(d) KAM' }],
+    [QO + 'panel_539753119-guidetextbox_8465383', 'text', { label: '1(e) Other information' }],
+    [QQ + 'guidetextbox_copy_co', 'text', { label: '2 Number of qualifications', required: true }],
+    [QQ + 'table_copy_copy_copy_1546127571-Row1-tableItem1', 'select', { label: 'Remark type', options: ['Select', 'Qualification', 'Reservation', 'Adverse remarks', 'Disclaimer'] }],
+    [QQ + 'table_copy_copy_copy_1546127571-Row1-headerItem1623401255929', 'text', { label: 'Remark comment' }],
+    [Q + 'panel-panel-panel-panel_1480276982_cop-panel-guidetextbox', 'textarea', { label: '3 Management responsibility', required: true }],
+    [Q + 'panel-panel-panel-panel_1480276982_cop_214140827-panel-guidetextbox', 'textarea', { label: '4 Auditor responsibility', required: true }],
+    [O + 'guidetextbox_copy', 'textarea', { label: '5(a) Rule 11', required: true }],
+    [O + 'guidetextbox', 'textarea', { label: '5(b) Any other' }],
+    [O + 'guidetextbox_1829933', 'textarea', { label: '6(a) Other legal and regulatory', required: true }],
+    [O + 'guideradiobutton', yesNo, { label: '6(b) CARO applicable', required: true }],
+    ...CARO_ROWS.flatMap(([row, sel, det], i) => [
+      [O + `table-${row}-${sel}`, 'select', { label: `6(c) CARO ${i + 1}`, options: ['Select', ...CARO_OPTS], caro: true }],
+      [O + `table-${row}-${det}`, 'textarea', { label: `6(c) CARO ${i + 1} details`, caro: true }],
+    ]),
+    [O + 'guidetextbox_1998545194', 'textarea', { label: '6(d) IFC', required: true }],
+    [S + 'guidetextbox', 'text', { label: 'Name (auto from DIN)', readonly: true }],
+    [S + 'guidedropdownlist_66', 'select', { label: 'Designation', required: true, options: ['Select', 'Director', 'IRP/RP/Liquidator'] }],
+    [S + 'guidetextbox_copy', 'text', { label: 'DIN', required: true }],
+  ],
+  eboard: [
+    [B + 'panel_20395728-guidetextbox', 'text', { label: '1 Web address' }],
+    [B + 'panel_892374834-guideradiobutton_cop', yesNo, { label: '2(a) OPC / small company', required: true }],
+    [B + 'panel_892374834-guidetextbox', 'text', { label: '2(b) Board meetings', required: true }],
+    ['__meetings__', 'meetings', {}],
+    [B + 'panel_892374834-guidetextbox_1601964588', 'text', { label: '2(c) Committee meetings', value: '0' }],
+    ...['headerItem1642493085005', 'tableItem1642490503676', 'tableItem1642490503677', 'tableItem1642490503678', 'tableItem1642490503679']
+      .map(c => [B + 'panel_892374834-table_47856561_copy__197747959-Row1642490503674-' + c, 'text', { label: 'Committee ' + c }]),
+    [B + 'panel-guidetextbox', 'textarea', { label: '3 Directors’ responsibility statement', required: true }],
+    [B + 'panel-guidetextbox_678662623', 'textarea', { label: '4 Frauds', required: true }],
+    [B + 'panel-guidetextbox_776880800', 'textarea', { label: '5 ID declaration', required: true }],
+    [B + 'panel-guidetextbox_433696601', 'textarea', { label: '6 s.178 policy', required: true }],
+    [B + 'panel_2013941629-table-Row1-tableItem1', 'text', { label: '7 Auditor remarks', readonly: true }],
+    [B + 'panel_2013941629-table-Row1-headerItem1658910299836', 'text', { label: '7 comment', readonly: true }],
+    [B + 'panel_2013941629-table_1894819512-Row1-tableItem1', 'text', { label: '8 Secretarial remarks', readonly: true }],
+    [B + 'panel_359247065-guideradiobutton', yesNo, { label: '9(a) Loans/guarantees given', required: true }],
+    [B + 'panel_359247065-guideradiobutton_28427114', yesNo, { label: '9(c) Reportable u/s 186', required: true }],
+    [B + 'panel_1986292804-guidetextbox', 'text', { label: '10 Number of transactions' }],
+    ['panel_1665650438-panel_526419145-panel-panel-panel-guidetextbox', 'textarea', { label: '11 State of affairs', required: true }],
+    [B + 'panel_1159321043-guidetextbox_1155662995', 'text', { label: '12(a) Reserves description' }],
+    [B + 'panel_1159321043-guidetextbox_1606013672', 'text', { label: '12(b) Reserves amount' }],
+    [B + 'panel_1159321043-guidetextbox_1330996963', 'text', { label: '13(a) Dividend description' }],
+    [B + 'panel_1159321043-guidetextbox_280412745', 'text', { label: '13(b) Dividend amount' }],
+    ['panel_1665650438-panel_526419145-panel-panel-panel-guidetextbox_2029873', 'textarea', { label: '14 Material changes', required: true }],
+    ['panel_1665650438-panel_526419145-panel-panel-panel-guidetextbox_1666541', 'textarea', { label: '15 Risk management', required: true }],
+    ...[['guidetextbox', '8(a) Technology'], ['guidetextbox_1729187724', '8(b) Energy'], ['guidetextbox_16495779', '8(c) Forex'],
+      ['guidetextbox_1313880', '(e)(ii) ID integrity'], ['guidetextbox_1313880_281340593', '(iii) IFC'], ['guidetextbox_1313880_1876612761', '(iv) Cost records'],
+      ['guidetextbox_1313880_1463766221', '(v) IBC'], ['guidetextbox_1313880_66255878', '(vi) OTS'], ['guidetextbox_1313880320', '(vii) Financial summary'],
+      ['guidetextbox_724037653', '(viii) Change in nature'], ['guidetextbox_23171735', '(ix) Directors/KMP changes'],
+      ...['586588836', '852355712', '2114398262', '202394133', '376959027', '321235249', '1528298031', '2090900673', '445648030']
+        .map((id, i) => ['guidetextbox_' + id, `(f)(${i + 1}) Deposits`]),
+      ['guidetextbox_1508126227', '(g) Orders'], ['guidetextbox_2054341819', '(h) Evaluation'], ['guidetextbox_2054341', '(i)(a) POSH'],
+      ['guidetextbox_2054341_1195835138', 'POSH received'], ['guidetextbox_2054341_382577391', 'POSH disposed'], ['guidetextbox_2054341_963786679', 'POSH >90 days'],
+      ['guidetextbox_2054341_578766345', '(i)(b) Maternity'], ['guidetextbox_2054341_33495648', '(j) Female'], ['guidetextbox_2054341_3432480', '(j) Male'],
+      ['guidetextbox_2054341_4534272', '(j) Transgender'], ['guidetextbox_2054341_564968698', '24(i) Other matters']]
+      .map(([t, l]) => [R + t, /POSH|Directors|Financial|Technology|Energy|Forex|ID int|IFC|Cost|IBC|OTS|nature|Orders|Evaluation|Maternity/.test(l) ? 'textarea' : 'text', { label: l, required: true }]),
+    [E + 'guidetextbox_1814224970', 'text', { label: 'Resolution number', required: true }],
+    [E + 'guidetextbox_1256508639', 'date', { label: 'Resolution date', required: true }],
+    [E + 'guidetextbox_1592552661', 'select', { label: 'Designation', required: true, options: ['Select Category', 'Director', 'Liquidator/IRP/RP'] }],
+    [E + 'guidetextbox_1410159061', 'text', { label: 'DIN / PAN', required: true }],
+  ],
+};
+
+document.getElementById('title').textContent = 'Mock MCA linked form: ' + FORM;
+if (FORM === 'eboard') document.getElementById('proceed').remove();
+const root = document.getElementById('form');
+const components = [];   // what the fake guideBridge visits
+let seq = 0;
+function node(path, kind, o) {
+  const name = PFX + path + '___jqName', id = PFX + path + '__' + (++seq);
+  const wrap = document.createElement('div');
+  wrap.className = 'guideFieldNode' + (o.caro ? ' caro' : '');
+  const lab = document.createElement('label');
+  lab.textContent = (o.required ? '* ' : '') + (o.label || path);
+  wrap.appendChild(lab);
+  let el;
+  if (kind === 'textarea') el = document.createElement('textarea');
+  else if (kind === 'select') { el = document.createElement('select'); o.options.forEach((t, i) => el.appendChild(new Option(t, i ? 'V' + i : ''))); }
+  else if (kind === 'radio') {
+    for (const [i, t] of ['Yes', 'No'].entries()) {
+      const r = document.createElement('input');
+      r.type = 'radio'; r.name = name; r.value = t === 'Yes' ? '1' : '0'; r.setAttribute('aria-label', t); r.id = id + '-' + i + '_widget';
+      const l = document.createElement('label'); l.htmlFor = r.id; l.textContent = t; l.style.display = 'inline';
+      wrap.append(r, l);
+      if (path.endsWith('_1904032734-panel-guideradiobutton')) r.addEventListener('change', caroToggle);
+    }
+    wrap.appendChild(Object.assign(document.createElement('div'), { className: 'guideFieldError' }));
+    root.appendChild(wrap); wrap.dataset.required = o.required ? '1' : ''; wrap.dataset.kind = 'radio';
+    return;
+  } else if (kind === 'upload' || kind === 'button') {
+    wrap.id = PFX + path + '__';
+    const b = document.createElement('button');
+    b.type = 'button'; b.name = name; b.id = PFX + path + '_widget'; b.textContent = kind === 'upload' ? 'Upload' : o.text;
+    if (kind === 'upload') b.addEventListener('click', () => mockUpload(o.panel));
+    wrap.appendChild(b); root.appendChild(wrap); return;
+  } else { el = document.createElement('input'); el.type = 'text'; if (kind === 'date') el.placeholder = 'DD/MM/YYYY'; }
+  if (kind === 'hiddenjson') { el.style.display = 'none'; el.setAttribute('aria-label', o.aria); }
+  el.name = name; el.id = id + '_widget';
+  if (o.readonly) el.readOnly = true;
+  if (o.value != null) el.value = o.value;
+  if (o.caro) el.disabled = true;
+  wrap.appendChild(el);
+  wrap.appendChild(Object.assign(document.createElement('div'), { className: 'guideFieldError' }));
+  wrap.dataset.required = o.required ? '1' : '';
+  root.appendChild(wrap);
+}
+function caroToggle() {
+  const yes = [...document.querySelectorAll('input[type=radio]')].find(r => r.name.endsWith('_1904032734-panel-guideradiobutton___jqName') && r.checked && r.getAttribute('aria-label') === 'Yes');
+  document.querySelectorAll('.caro select, .caro textarea').forEach(e => { e.disabled = !yes; });
+}
+
+// Board-meeting table: one row; more only through guideBridge instanceManager.addInstance().
+function meetingsTable() {
+  const t = document.createElement('table'); t.className = 'rows'; t.id = 'meetings';
+  t.innerHTML = '<tr><th>Date</th><th>Total</th><th>Attended</th><th>%</th></tr>';
+  root.appendChild(t);
+  const addRow = () => {
+    const tr = document.createElement('tr'); tr.className = 'guideTableRuntimeRow';
+    for (const c of ['tableItem1642490503676', 'tableItem1642490503677', 'tableItem1642490503678', 'tableItem1642490503679']) {
+      const td = document.createElement('td'); const i = document.createElement('input');
+      i.name = PFX + B + 'panel_892374834-' + ROW + '-' + c + '___jqName';
+      if (c.endsWith('676')) i.placeholder = 'DD/MM/YYYY';
+      td.appendChild(i); tr.appendChild(td);
+    }
+    t.appendChild(tr);
+  };
+  addRow();
+  components.push({ id: PFX + B + 'panel_892374834-' + ROW, instanceManager: {
+    get instanceCount() { return t.querySelectorAll('tr.guideTableRuntimeRow').length; },
+    addInstance() { setTimeout(addRow, 120); window.__log.push('addInstance'); },
+  } });
+}
+
+for (const [p, k, o] of FIELDS[FORM] || []) { if (k === 'meetings') meetingsTable(); else node(p, k, o); }
+window.guideBridge = { visit(cb) { components.forEach(cb); } };
+
+function modal(msg) {
+  const m = document.createElement('div'); m.className = 'modal'; m.setAttribute('role', 'dialog');
+  m.innerHTML = '<p></p><button type="button">OK</button>'; m.querySelector('p').textContent = msg;
+  m.querySelector('button').onclick = () => m.remove(); document.body.appendChild(m);
+}
+
+// AOC-2 Upload: MCA's script creates a file input on click and clicks it (no static input).
+function mockUpload(panel) {
+  window.__log.push('upload:' + panel);
+  const inp = document.createElement('input'); inp.type = 'file'; inp.style.display = 'none'; inp.accept = '.xlsm';
+  inp.addEventListener('change', () => {
+    const f = inp.files[0];
+    window.__log.push('file:' + (f && f.name) + ':' + (f && f.size));
+    setTimeout(() => {
+      const countName = panel === 'atArm' ? A + 'panel_copy_copy-panel_885569515-guidetextbox' : A + 'panel-guidetextbox';
+      const n = Number(document.querySelector(`[name="${PFX + countName}___jqName"]`).value || 0);
+      if (!f || !/\.xlsm$/i.test(f.name) || !n) { modal('Number of records entered in Excel File donot match with the number of contracts entered'); return; }
+      if (panel === 'atArm') document.querySelector('[aria-label="atArmSubmitData"]').value = JSON.stringify(Array.from({ length: n }, (_, i) => ({ sr: i + 1 })));
+      modal('File uploaded successfully');
+    }, 400);
+  });
+  document.body.appendChild(inp);
+  inp.click();
+}
+
+document.getElementById('save').onclick = () => {
+  window.__saveClicks++; window.__log.push('save');
+  let bad = 0;
+  document.querySelectorAll('.guideFieldNode').forEach(w => {
+    const err = w.querySelector('.guideFieldError'); if (!err) return;
+    let empty;
+    if (w.dataset.kind === 'radio') empty = ![...w.querySelectorAll('input[type=radio]')].some(r => r.checked);
+    else { const el = w.querySelector('input, textarea, select'); empty = !el.disabled && !el.readOnly && !String(el.value).trim(); }
+    err.textContent = w.dataset.required && empty ? 'This field is required' : '';
+    if (err.textContent) bad++;
+  });
+  if (FORM === 'aoc2') {
+    const n = Number(document.querySelector(`[name="${PFX + A}panel_copy_copy-panel_885569515-guidetextbox___jqName"]`).value || 0);
+    const data = document.querySelector('[aria-label="atArmSubmitData"]').value;
+    if (n && !data) { bad++; document.querySelectorAll('.guideFieldError')[1].textContent = 'Please upload the Excel'; }
+  }
+  if (!bad) setTimeout(() => modal('Data Added Successfully'), 500);
+};
+document.getElementById('proceed').onclick = () => { window.__proceedClicks++; window.__log.push('proceed'); setTimeout(() => { document.getElementById('form').innerHTML = '<h3>Proceeded (mock)</h3>'; }, 300); };
+document.getElementById('submit').onclick = () => { window.__submitClicks++; window.__log.push('SUBMIT'); };
+</script>
+<script src="../js/page-automation.js"></script>
+<script src="../js/linked/aoc2.js"></script>
+<script src="../js/linked/eauditor.js"></script>
+<script src="../js/linked/eboard.js"></script>
+<script src="../js/linked/runner.js"></script>
+<script>
+// Demo Terra Technology Private Limited, FY 2025-26 (AOC-4 payload shape) + test answers.
+const CLIENT = {
+  general: { CIN: 'U01100KA2019PTC000001', COMPANY_NAME: 'Demo Terra Technology Private Limited', FY_FROM: '01/04/2025', FY_TO: '31/03/2026',
+    BOARD_MEETING_DATE: '30/09/2026', BOARD_REPORT_DATE: '30/09/2026', AUDITOR_SIGN_DATE: '30/09/2026', AGM_HELD: 'Yes', AGM_DATE: '30/09/2026', IS_SUBSIDIARY: 'No' },
+  signatoriesFS: [{ din: '07654321', name: 'Arun Rao', designation: 'Director', date: '30/09/2026' }, { din: '09876543', name: 'Kiran Rao', designation: 'Director', date: '30/09/2026' }],
+  auditor: { AUDITOR_NAME: 'Demo Audit & Co', AUDITOR_FIRM_REG: '000000S', MEMBER_NAME: 'Demo Member', MEMBER_NUMBER: '700001', UDIN: '26123456ABCDEF1234' },
+  auditorReport: { QUALIFIED_OPINION: 'No', CAG_COMMENTED: 'No' }, relatedParty: { ANY_TRANSACTION: 'Yes' }, csr: { CSR_APPLICABILITY: 'No' },
+  costRecords: { MAINTENANCE_MANDATED: 'No', AUDIT_MANDATED: 'No' },
+  balanceSheet: {
+    current: { SHARE_CAPITAL: 100000, RESERVES_SURPLUS: -1462000, LONG_TERM_BORROWINGS: 1406500, SHORT_TERM_BORROWINGS: 0, SHORT_TERM_PROVISIONS: 30000,
+      OTHER_CURRENT_LIAB: 781500, NON_CURRENT_INVESTMENTS: 0, CURRENT_INVESTMENTS: 0, TOTAL_ASSETS: 856000 },
+    previous: { SHARE_CAPITAL: 100000, RESERVES_SURPLUS: -987700 },
+  },
+  balanceSheetBreakup: { BS_UNSEC_LT_BANK_LOANS: { current: 0, previous: 0 } },
+  profitLoss: {
+    current: { REVENUE_OPERATIONS: 1537800, OTHER_INCOME: 10300, TOTAL_INCOME: 1548100, EMPLOYEE_EXPENSES: 1392500, DEPRECIATION: 26300, OTHER_EXPENSES: 603500,
+      TOTAL_EXPENSES: 2022300, PROFIT_BEFORE_TAX: -474200, PROFIT_AFTER_TAX: -474200, EPS_BASIC: -47.42 },
+    previous: { REVENUE_OPERATIONS: 2315800, PROFIT_AFTER_TAX: -177462 },
+  },
+  financialParametersBS: { FP_BS_22: 348000 }, principalProducts: { CATEGORY_DESC: 'Human resources management consulting services' },
+};
+const NATURE = 'Related party appointment to any office or place of profit in the company, its subsidiary company or associate company';
+// Not director pay (Explanation (a) to s.188(1)). PANs below are made-up test values (MCA asks for the PAN, not the DIN, in the AOC-2 Excel).
+const ANSWERS = {
+  BOARD_RESOLUTION_NO: 'TEST-01/2026-27', BOARD_RESOLUTION_DATE: '30/09/2026', DECL_DESIGNATION: 'Director', DECL_DIN: '07654321',
+  ROWS: JSON.stringify([
+    { id: 'ABCPR1234K', name: 'Meena Rao', relationship: 'Relative of director Arun Rao', nature: 'Leasing of property', duration: '01/04/2025 to 31/03/2026', terms: 'Office rent Rs 15,000 per month', approvalDate: '01/04/2025', advance: '0' },
+    { id: 'ABCPS5678E', name: 'Rao Consulting LLP', relationship: 'LLP in which director Kiran Rao is a partner', nature: NATURE, duration: '01/04/2025 to 31/03/2026', terms: 'Consultant appointment, Rs 20,000 per month', approvalDate: '01/04/2025', advance: '0' },
+  ]),
+  NOT_AT_ARM_ROWS: '[]',
+  RULE11: 'No pending litigations; no foreseeable losses on long-term contracts; no amounts due to the IEPF; no dividend declared.',
+  EMPHASIS: 'None', OTHER_INFO: 'None', OTHER_5B: 'None',
+  BOARD_MEETINGS: JSON.stringify([{ date: '15/05/2025', total: 3, attended: 3 }, { date: '20/08/2025', total: 3, attended: 3 }, { date: '18/11/2025', total: 3, attended: 2 }, { date: '16/02/2026', total: 3, attended: 3 }]),
+  EMP_FEMALE: '1', EMP_MALE: '2', EMP_TRANSGENDER: '0', WEBSITE: '', DIRECTOR_CHANGES: 'None', HAS_SUBSIDIARY_OR_JV: 'No',
+};
+
+// Same order as lfRun: pre-steps → one pageFill → Save → confirm → Proceed. Runs in this page (no extension).
+async function selfTest() {
+  const out = document.getElementById('out');
+  const F = (window.LINKED_FORMS || {})[FORM];
+  if (!F) { out.textContent = 'module js/linked/' + FORM + '.js not loaded'; return; }
+  const log = []; const t = Date.now(); const step = (k, v) => { log.push([k, Date.now() - t, v]); out.textContent = JSON.stringify(log, null, 1); };
+  // ?job=<id>: use that job's payload and the company-master answers from the local backend instead of the fixture.
+  let client = CLIENT, answers = ANSWERS;
+  const jobId = new URLSearchParams(location.search).get('job');
+  if (jobId) {
+    const API = 'http://localhost:4000';
+    const j = await (await fetch(`${API}/api/extension/jobs/${encodeURIComponent(jobId)}`)).json();
+    let p = (j.job || j).payload; if (typeof p === 'string') p = JSON.parse(p);
+    client = p.client || p.data || p;
+    const get = async f => Object.fromEntries(((await (await fetch(`${API}/api/company-answers?cin=${client.general.CIN}&form=${f}`)).json()).answers || []).map(x => [x.field_key, x.value]));
+    const forms = ['aoc4', ...(F.extraAnswers || []), F.answersForm].filter((f, i, a) => f && a.indexOf(f) === i);
+    answers = Object.assign({}, ...(await Promise.all(forms.map(get))));
+    step('live', { job: jobId, cin: client.general.CIN, answerForms: forms, answerKeys: Object.keys(answers).length });
+  }
+  const b = F.buildData(client, answers);
+  step('build', { missing: b.missing.map(m => m.key + (m.optional ? '?' : '')), notes: b.notes });
+  const v = { ...b.values };
+  for (const p of F.pre || []) {
+    if (p.skip && p.skip(v)) { step('pre-skip', p.label); continue; }
+    if (p.prepare) {
+      try { await p.prepare(v); } catch (e) { v.__AOC2_EXCEL = { base64: btoa('PK-mock-excel'), fileName: 'AOC-2_mock.xlsm' }; step('prepare-fallback', e.message); }
+    }
+    step('pre:' + p.label, await p.func(...p.args(v)));
+  }
+  const jobs = F.jobs(b.values);
+  const r = await pageFill(jobs);
+  const rows = lfFieldRows(jobs, r.results);
+  step('fill', { counts: rows.counts, failed: rows.rows.filter(x => x.status !== 'filled') });
+  step('save', pageLinkedClickSave());
+  step('confirm', await pageLinkedConfirmSave(3000));
+  if (F.nextButton === 'Proceed' && document.getElementById('stProceed').checked) step('proceed', pageLinkedProceed());
+  step('clicks', { save: window.__saveClicks, proceed: window.__proceedClicks, submit: window.__submitClicks, log: window.__log });
+  window.__selfTest = log;
+  return log;
+}
+document.getElementById('selftest').onclick = selfTest;
+</script>
+</body></html>
